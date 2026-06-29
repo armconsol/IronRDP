@@ -2440,6 +2440,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "ironrdp-agent"
+version = "0.0.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "ironrdp-cfg",
+ "ironrdp-client",
+ "ironrdp-core",
+ "ironrdp-input",
+ "ironrdp-pdu",
+ "ironrdp-propertyset",
+ "ironrdp-rdpfile",
+ "libc",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "whoami",
+]
+
+[[package]]
 name = "ironrdp-ainput"
 version = "0.7.0"
 dependencies = [

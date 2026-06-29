@@ -3,6 +3,24 @@ pub use target_addr::{ParseTargetAddrError, TargetAddr, TargetHost};
 
 use ironrdp_propertyset::PropertySet;
 
+/// Property keys whose values are secrets and must never be surfaced verbatim.
+///
+/// Matching is case-insensitive, so a single lowercase entry covers casing variants such as
+/// `GatewayPassword`/`gatewaypassword` and `ClearTextPassword`/`cleartextpassword`.
+const SECRET_KEYS: &[&str] = &[
+    "cleartextpassword",        // plaintext RDP account password
+    "gatewaypassword",          // RD gateway password (both casings)
+    "ironrdp_rdcleanpathtoken", // RDCleanPath authentication token
+];
+
+/// Returns `true` when `key` names a property whose value is a secret (password or token).
+///
+/// Consumers that expose property sets to untrusted readers (logs, IPC responses, dumps) should
+/// redact the value of any key for which this returns `true`. The comparison is case-insensitive.
+pub fn is_secret_key(key: &str) -> bool {
+    SECRET_KEYS.iter().any(|secret| key.eq_ignore_ascii_case(secret))
+}
+
 /// Error returned when the `server port` property value is outside the valid port range (1–65535).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct InvalidServerPort;
